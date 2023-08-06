@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from .load_dotenv import django_secret_key, database_name, database_username, \
+    database_password, database_host, database_port
 import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-78-*7t^p0#75j@k2r)2x9k2p+0$bv2mirc2#-)y-ss_w@e_9j^'
+SECRET_KEY = django_secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -118,11 +121,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'library_db',
-        'USER': 'root',
-        'PASSWORD': 'sql1234',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': database_name,
+        'USER': database_username,
+        'PASSWORD': database_password,
+        'HOST': database_host,
+        'PORT': database_port,
     }
 }
 

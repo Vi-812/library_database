@@ -87,12 +87,8 @@
     <div class="separator"></div>
 
     <main>
-        <h1>Login</h1> <!-- Надписи "Login" не дублируются -->
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Login"> <!-- Кнопка отцентрована по горизонтали -->
-        </form>
+        {% block content %}
+        {% endblock %}
     </main>
 
     <footer>

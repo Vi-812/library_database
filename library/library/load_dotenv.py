@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
+
 django_secret_key = os.getenv('DJANGO_SECRET_KEY')
 database_name = os.getenv('DATABASE_NAME')
 database_username = os.getenv('DATABASE_USER')

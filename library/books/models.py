@@ -35,3 +35,10 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class AppSettings(models.Model):
+    books_per_page = models.PositiveIntegerField(default=20)
+    feedback_email = models.EmailField(default="vi812x@gmail.com")
+    data_source_url = models.URLField(
+        default="https://gitlab.grokhotov.ru/hr/symfony-test-vacancy/-/raw/main/books.json")

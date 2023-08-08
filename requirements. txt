@@ -3,6 +3,8 @@ pip install Pillow
 pip install mysqlclient
 pip install python-dotenv
 pip install django-admin-tools - ??
+pip install requests
+
 
 
 root/sql1234
@@ -15,54 +17,3 @@ git clone
 requirements
 migration
 createsuperuser
-
-
-
-Для разделения функционала кнопок на странице настроек, вы можете воспользоваться следующим подходом:
-
-Используйте разные значения атрибута name для каждой кнопки, чтобы можно было идентифицировать, какая кнопка была нажата.
-
-В обработчике представления (settings_view), проверьте значение параметра request.POST.get('имя_атрибута_name') и выполните соответствующие действия на основе этого значения.
-
-Для каждой настройки создайте отдельный блок if или switch (в зависимости от количества настроек), чтобы обработать каждую из них индивидуально.
-
-Пример кода:
-
-python
-Copy code
-@staff_member_required
-def settings_view(request):
-    app_settings = AppSettings.objects.first()
-
-    if request.method == 'POST':
-        if 'update_books_per_page' in request.POST:
-            app_settings.books_per_page = request.POST.get('books_per_page', app_settings.books_per_page)
-        elif 'update_feedback_email' in request.POST:
-            app_settings.feedback_email = request.POST.get('feedback_email', app_settings.feedback_email)
-        elif 'update_data_source_url' in request.POST:
-            app_settings.data_source_url = request.POST.get('data_source_url', app_settings.data_source_url)
-
-        app_settings.save()
-
-    context = {'app_settings': app_settings}
-    return render(request, 'settings.html', context)
-И в шаблоне settings.html, укажите соответствующие значения атрибута name для каждой кнопки:
-
-html
-Copy code
-<form method="post">
-  {% csrf_token %}
-  <label for="books_per_page">Books per Page:</label>
-  <input type="number" name="books_per_page" value="{{ app_settings.books_per_page }}">
-  <button type="submit" name="update_books_per_page">Apply</button>
-  <br>
-  <label for="feedback_email">Feedback Email:</label>
-  <input type="email" name="feedback_email" value="{{ app_settings.feedback_email }}">
-  <button type="submit" name="update_feedback_email">Apply</button>
-  <br>
-  <label for="data_source_url">Data Source URL:</label>
-  <input type="url" name="data_source_url" value="{{ app_settings.data_source_url }}">
-  <button type="submit" name="update_data_source_url">Apply</button>
-  <br>
-</form>
-Таким образом, при нажатии каждой из кнопок будет обрабатываться только соответствующая настройка.

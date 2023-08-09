@@ -2,9 +2,8 @@ pip install django
 pip install Pillow
 pip install mysqlclient
 pip install python-dotenv
-pip install django-admin-tools - ??
 pip install requests
-
+pip install loguru
 
 
 root/sql1234

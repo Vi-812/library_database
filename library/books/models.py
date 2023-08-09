@@ -22,16 +22,16 @@ class Book(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     isbn = models.CharField(max_length=20)
-    pages = models.IntegerField()
-    published_date = models.DateField()
+    page_count = models.IntegerField()
+    published_date = models.DateField(null=True, blank=True)
     thumbnail_url = models.URLField()
-    cover_image = models.ImageField(upload_to='book_covers/', null=True)
+    cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
     short_description = models.TextField()
     long_description = models.TextField()
     status = models.CharField(max_length=10)
 
     authors = models.ManyToManyField(Author)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, blank=True)
 
     def __str__(self):
         return self.title

@@ -21,13 +21,13 @@ class Author(models.Model):
 class Book(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=20)
+    isbn = models.CharField(max_length=20, null=True, blank=True)
     page_count = models.IntegerField()
     published_date = models.DateField(null=True, blank=True)
-    thumbnail_url = models.URLField()
+    thumbnail_url = models.URLField(null=True, blank=True)
     cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
-    short_description = models.TextField()
-    long_description = models.TextField()
+    short_description = models.TextField(null=True, blank=True)
+    long_description = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=10)
 
     authors = models.ManyToManyField(Author)

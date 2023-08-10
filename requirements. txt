@@ -4,6 +4,7 @@ pip install mysqlclient
 pip install python-dotenv
 pip install requests
 pip install loguru
+pip install python-dateutil
 
 
 root/sql1234

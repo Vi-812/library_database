@@ -17,4 +17,13 @@
   <button type="submit" name="load_data_url">Upload books</button>
   <br>
 </form>
+
+{% if report_settings %}
+  <h3>Отчет:</h3>
+  <ul>
+    {% for key, value in report_settings.items %}
+      <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
 {% endblock %}

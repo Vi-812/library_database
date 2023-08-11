@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import settings_view
+from .views import *
 
 app_name = 'books'
 
 urlpatterns = [
-    path('', settings_view, name='index'),
+    path('', index, name='index'),
     path('settings/', settings_view, name='app_settings'),
+    path('category/<int:category_id>/', category_detail, name='category_detail'),
 ]

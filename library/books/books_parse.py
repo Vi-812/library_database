@@ -132,5 +132,5 @@ def parser(url):
         "Added": added_count,
         "Duplicates": duplicate_count,
         "Errors": error_count,
-        "ReturnMessage": "Добавление книг прошло успешно"
+        "ReturnMessage": "Добавление книг прошло успешно."
     }

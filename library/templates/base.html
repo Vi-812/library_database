@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* Разделение шапки на 8 равных частей */
+            align-items: center;
+            width: 100%;
+        }
+
+        .separator {
+            width: 100%;
+            height: 2px;
+            background-color: #ccc;
+        }
+
+        main {
+            padding: 20px;
+            width: 80%; /* Ширина основного контента, можно настроить по вашему усмотрению */
+            max-width: 1200px; /* Максимальная ширина основного контента, чтобы не было слишком широко на больших экранах */
+            margin: 0 auto; /* Горизонтальное выравнивание основного контента по центру */
+            display: flex; /* Горизонтальное выравнивание контента */
+            justify-content: center; /* Горизонтальное выравнивание контента по центру */
+            box-sizing: border-box;
+            flex-direction: column; /* Вертикальное выравнивание элементов внутри main */
+            align-items: center; /* Горизонтальное выравнивание элементов внутри main */
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 10px;
+            width: 100%;
+        }
+
+        /* Дополнительные стили */
+        header p {
+            grid-column: 7; /* Размещение элемента в 7 части шапки */
+            margin: 0;
+        }
+
+        header a {
+            grid-column: 8; /* Размещение элемента в 8 части шапки */
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        /* Стили для формы */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирование элементов формы по горизонтали */
+        }
+
+        form input[type="submit"] {
+            margin-top: 10px; /* Отступ кнопки от остальных элементов формы */
+        }
+    </style>
+
+</head>
+<body>
+
+    <header>
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </header>
+
+    <div class="separator"></div>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+
+    </footer>
+
+</body>
+</html>

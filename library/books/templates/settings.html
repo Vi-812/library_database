@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Application Settings</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="books_per_page">Books per Page:</label>
+  <input type="number" name="books_per_page" value="{{ app_settings.books_per_page }}">
+  <button type="submit" name="pagination_setting">Save pagination</button>
+  <br>
+  <label for="feedback_email">Feedback Email:</label>
+  <input type="email" name="feedback_email" value="{{ app_settings.feedback_email }}">
+  <button type="submit" name="feedback_email_setting">Save email</button>
+  <br>
+  <label for="data_source_url">Data Source URL:</label>
+  <input type="url" name="data_source_url" value="{{ app_settings.data_source_url }}">
+  <button type="submit" name="load_data_url">Upload books</button>
+  <br>
+</form>
+
+{% if report_settings %}
+  <h3>Отчет:</h3>
+  <ul>
+    {% for key, value in report_settings.items %}
+      <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

@@ -29,7 +29,13 @@
     <div class="col-md-4 mb-4">
         <div class="card">
             <a href="{% url 'books:book_detail' book.id %}">
-                <img src="{{ book.thumbnail_url }}" alt="{{ book.title }}" class="card-img-top">
+                {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="card-img-top img-fluid"
+                     style="width: 150px; height: 200px;">
+                {% else %}
+                <img src="{{ default_image }}" alt="Стандартное изображение" class="card-img-top img-fluid"
+                     style="width: 150px; height: 200px;">
+                {% endif %}
             </a>
             <div class="card-body">
                 <h5 class="card-title"><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></h5>
@@ -37,7 +43,12 @@
             </div>
         </div>
     </div>
+    {% if forloop.counter|divisibleby:3 and not forloop.last %}
+</div>
+<div class="row">
+    {% endif %}
     {% endfor %}
+
 </div>
 {% else %}
 <p>В этой категории нет доступных книг.</p>

@@ -2,6 +2,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from .models import Category, Book, AppSettings
 from .books_parse import parser
+from django.conf import settings
+import os
+
+DEFAULT_IMAGE_PATH = os.path.join(settings.BASE_DIR, 'media', 'default_image.jpg')
 
 
 def get_category_ancestors(category):
@@ -35,6 +39,7 @@ def category_detail(request, category_id):
         'ancestors': ancestors,
         'subcategories': subcategories,
         'books': books,
+        'default_image': DEFAULT_IMAGE_PATH,
     }
 
     return render(request, 'category_detail.html', context)

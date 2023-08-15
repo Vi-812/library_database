@@ -131,9 +131,14 @@ def parser(url):
             error_count += 1
             logger.error(f"Ошибка при обработке книги: {e}")
 
+    if added_count > 0:
+        return_message = "Добавление книг прошло успешно."
+    else:
+        return_message = "Новых книг не добавлено."
+
     return {
         "Added": added_count,
         "Duplicates": duplicate_count,
         "Errors": error_count,
-        "ReturnMessage": "Добавление книг прошло успешно."
+        "ReturnMessage": return_message,
     }

@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Детали категории - {{ category.name }}{% endblock %}
+
+{% block content %}
+<h2>
+    <p>
+        <a href="{% url 'books:index' %}">Все категории</a> &gt;
+        {% for ancestor in ancestors %}
+        <a href="{% url 'books:category_detail' ancestor.id %}">{{ ancestor.name }}</a> &gt;
+        {% endfor %}
+        {{ category.name }}
+    </p>
+</h2>
+
+{% if subcategories %}
+<h2>Подкатегории:</h2>
+<ul>
+    {% for subcategory in subcategories %}
+    <li><a href="{% url 'books:category_detail' subcategory.id %}">{{ subcategory.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if books %}
+<h2>Книги в этой категории:</h2>
+<div class="row">
+    {% for book in books %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <a href="{% url 'books:book_detail' book.id %}">
+                <img src="{{ book.thumbnail_url }}" alt="{{ book.title }}" class="card-img-top">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></h5>
+                <p class="card-text">{{ book.short_description }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>В этой категории нет доступных книг.</p>
+{% endif %}
+
+{% endblock %}

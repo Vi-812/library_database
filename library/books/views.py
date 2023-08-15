@@ -4,14 +4,20 @@ from .models import Category, Book, AppSettings
 from .books_parse import parser
 
 
+def get_category_ancestors(category):
+    ancestors = []
+    while category.parent:
+        ancestors.insert(0, category.parent)
+        category = category.parent
+    return ancestors
+
+
 def index(request):
     top_level_categories = Category.objects.filter(parent=None)
-
-    books_without_categories = Book.objects.filter(categories=None)
+    top_level_categories = sorted(top_level_categories, key=lambda category: category.name)
 
     context = {
         'top_level_categories': top_level_categories,
-        'books_without_categories': books_without_categories
     }
 
     return render(request, 'index.html', context)
@@ -19,12 +25,24 @@ def index(request):
 
 def category_detail(request, category_id):
     category = Category.objects.get(pk=category_id)
+    ancestors = get_category_ancestors(category)
+    subcategories = Category.objects.filter(parent=category)
+
+    books = Book.objects.filter(categories=category)
 
     context = {
         'category': category,
+        'ancestors': ancestors,
+        'subcategories': subcategories,
+        'books': books,
     }
 
     return render(request, 'category_detail.html', context)
+
+
+def book_detail(request, book_id):
+    book = Book.objects.filter(id=book_id)
+    return render(request, 'book_detail.html', {'book': book})
 
 
 @staff_member_required

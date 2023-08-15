@@ -1,20 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Bookstore - Home{% endblock %}
+{% block title %}Основные категории{% endblock %}
 
 {% block content %}
-<h1>Top Level Categories</h1>
 <ul>
+    <h2>Выберите интересующую категорию</h2>
     {% for category in top_level_categories %}
     <li><a href="{% url 'books:category_detail' category.id %}">{{ category.name }}</a>
     </li>
-    {% endfor %}
-</ul>
-
-<h1>New Releases</h1>
-<ul>
-    {% for book in books_without_categories %}
-    <li>{{ book.title }}</li>
     {% endfor %}
 </ul>
 {% endblock %}

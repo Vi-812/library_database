@@ -6,9 +6,6 @@ Logout
 
 {% block content %}
     <h1>Logout</h1>
-    <p>Are you sure you want to logout?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
+    <p>Будем рады видеть вас снова!</p>
+    <a href="{% url 'books:index' %}">На главную страницу</a>
 {% endblock %}

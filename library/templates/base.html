@@ -6,6 +6,10 @@
         {% endblock %}
     </title>
 
+    <!-- Подключение стилей Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Ваши стили -->
     <style>
         body {
             margin: 0;
@@ -19,7 +23,7 @@
             background-color: #f1f1f1;
             padding: 10px;
             display: grid;
-            grid-template-columns: repeat(8, 1fr); /* Разделение шапки на 8 равных частей */
+            grid-template-columns: repeat(8, 1fr);
             align-items: center;
             width: 100%;
         }
@@ -32,14 +36,14 @@
 
         main {
             padding: 20px;
-            width: 80%; /* Ширина основного контента, можно настроить по вашему усмотрению */
-            max-width: 1200px; /* Максимальная ширина основного контента, чтобы не было слишком широко на больших экранах */
-            margin: 0 auto; /* Горизонтальное выравнивание основного контента по центру */
-            display: flex; /* Горизонтальное выравнивание контента */
-            justify-content: center; /* Горизонтальное выравнивание контента по центру */
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
             box-sizing: border-box;
-            flex-direction: column; /* Вертикальное выравнивание элементов внутри main */
-            align-items: center; /* Горизонтальное выравнивание элементов внутри main */
+            flex-direction: column;
+            align-items: center;
         }
 
         footer {
@@ -49,13 +53,7 @@
         }
 
         /* Дополнительные стили */
-        header p {
-            grid-column: 7; /* Размещение элемента в 7 части шапки */
-            margin: 0;
-        }
-
         header a {
-            grid-column: 8; /* Размещение элемента в 8 части шапки */
             text-decoration: none;
             margin-left: 10px;
         }
@@ -64,36 +62,60 @@
         form {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Центрирование элементов формы по горизонтали */
+            align-items: center;
         }
 
         form input[type="submit"] {
-            margin-top: 10px; /* Отступ кнопки от остальных элементов формы */
+            margin-top: 10px;
         }
     </style>
-
 </head>
 <body>
 
-    <header>
+<header>
+    <div style="grid-column: 1;">
+        <a href="{% url 'books:index' %}">Главная страница</a>
+    </div>
+    <div style="grid-column: 2;">
+        <a href="#">Поиск книги</a>
+    </div>
+    <div style="grid-column: 3;">
+        <a href="#">Обратная связь</a>
+    </div>
+    <div style="grid-column: 4;">
+        {% if user.is_authenticated and user.is_superuser %}
+            <a href="{% url 'books:app_settings' %}">Настройки</a>
+        {% endif %}
+    </div>
+    <div style="grid-column: 5;">
+    </div>
+    <div style="grid-column: 6 / span 2; text-align: right;">
         {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}!</p>
+            Привет, {{ user.username }}!
             <a href="{% url 'logout' %}">Logout</a>
         {% else %}
             <a href="{% url 'login' %}">Login</a>
         {% endif %}
-    </header>
+    </div>
+</header>
 
-    <div class="separator"></div>
+<div class="separator"></div>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
 
-    <footer>
+<div class="separator"></div>
 
-    </footer>
+<footer>
+    <!-- ... (ваш текущий код для подвала) ... -->
+</footer>
+
+<!-- Подключение скриптов Bootstrap -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

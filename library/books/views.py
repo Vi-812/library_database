@@ -2,29 +2,60 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from .models import Category, Book, AppSettings
 from .books_parse import parser
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+import os
+
+DEFAULT_IMAGE_PATH = os.path.join(settings.BASE_DIR, 'media', 'default_image.jpg')
+
+
+def get_category_ancestors(category):
+    ancestors = []
+    while category.parent:
+        ancestors.insert(0, category.parent)
+        category = category.parent
+    return ancestors
 
 
 def index(request):
     top_level_categories = Category.objects.filter(parent=None)
-
-    books_without_categories = Book.objects.filter(categories=None)
+    top_level_categories = sorted(top_level_categories, key=lambda category: category.name)
 
     context = {
         'top_level_categories': top_level_categories,
-        'books_without_categories': books_without_categories
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'books/index.html', context)
 
 
 def category_detail(request, category_id):
     category = Category.objects.get(pk=category_id)
+    ancestors = get_category_ancestors(category)
+    subcategories = Category.objects.filter(parent=category)
+
+    books = Book.objects.filter(categories=category)
 
     context = {
         'category': category,
+        'ancestors': ancestors,
+        'subcategories': subcategories,
+        'books': books,
+        'default_image': DEFAULT_IMAGE_PATH,
     }
 
-    return render(request, 'category_detail.html', context)
+    return render(request, 'books/category_detail.html', context)
+
+
+def book_detail(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    category_path = get_category_ancestors(book.categories.first()) + [book.categories.first()]
+
+    context = {
+        'book': book,
+        'category_path': category_path,
+    }
+
+    return render(request, 'books/book_detail.html', context)
 
 
 @staff_member_required
@@ -56,4 +87,4 @@ def settings_view(request):
             app_settings.save()
 
     context = {"app_settings": app_settings, "report_settings": report_settings}
-    return render(request, "settings.html", context)
+    return render(request, "books/settings.html", context)

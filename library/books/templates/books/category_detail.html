@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали категории - {{ category.name }}{% endblock %}
+
+{% block content %}
+<h2>
+    <p>
+        <a href="{% url 'books:index' %}">Все категории</a> &gt;
+        {% for ancestor in ancestors %}
+        <a href="{% url 'books:category_detail' ancestor.id %}">{{ ancestor.name }}</a> &gt;
+        {% endfor %}
+        {{ category.name }}
+    </p>
+</h2>
+
+{% if subcategories %}
+<h2>Подкатегории:</h2>
+<ul>
+    {% for subcategory in subcategories %}
+    <li><a href="{% url 'books:category_detail' subcategory.id %}">{{ subcategory.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if books %}
+<h2>Книги в этой категории:</h2>
+{% if books|length > 1 %}
+<div class="row">
+{% endif %}
+    {% for book in books %}
+    <div class="{% if books|length > 1 %}col-md-4 mb-4{% endif %}">
+        <div class="card">
+            <a href="{% url 'books:book_detail' book.id %}">
+                {% if book.cover_image %}
+                <img src="{{ book.thumbnail_url }}" alt="{{ book.title }}" class="card-img-top img-fluid" style="width: 150px; height: 200px;">
+                {% else %}
+                <img src="{{ default_image }}" alt="Стандартное изображение" class="card-img-top img-fluid"
+                     style="width: 150px; height: 200px;">
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></h5>
+                {% if book.short_description %}
+                <p class="card-text">{{ book.short_description }}</p>
+                {% else %}
+                <p class="card-text">Описание данной книги отсутствует.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>В этой категории нет доступных книг.</p>
+    {% endfor %}
+{% if books|length > 1 %}
+</div>
+{% endif %}
+{% endif %}
+
+{% endblock %}

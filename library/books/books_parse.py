@@ -14,18 +14,21 @@ logger.add(log_file_path, format='{time} {level} {message}', level='INFO')
 def parse_categories(categories, parent=None):
     category_objs = []
 
-    if not categories:
-        new_products_category, _ = Category.objects.get_or_create(name="New products")
+    if not categories and not parent:
+        new_products_category, _ = Category.objects.get_or_create(name="Новинки", parent=None)
         category_objs.append(new_products_category)
+        return category_objs
 
-    for category_name in categories:
-        if category_name:
-            category_obj, _ = Category.objects.get_or_create(name=category_name, parent=parent)
-            category_objs.append(category_obj)
+    first_category = categories.pop(0)
+    if first_category == "":
+        first_category = "Новинки"
+    new_products_category, _ = Category.objects.get_or_create(name=first_category, parent=parent)
+    category_objs.append(new_products_category)
 
-            if "children" in category_name:
-                child_categories = category_name["children"]
-                parse_categories(child_categories, parent=category_obj)
+    if categories:
+        children = parse_categories(categories=categories, parent=new_products_category)
+        for child in children:
+            category_objs.append(child)
 
     return category_objs
 
@@ -128,9 +131,14 @@ def parser(url):
             error_count += 1
             logger.error(f"Ошибка при обработке книги: {e}")
 
+    if added_count > 0:
+        return_message = "Добавление книг прошло успешно."
+    else:
+        return_message = "Новых книг не добавлено."
+
     return {
         "Added": added_count,
         "Duplicates": duplicate_count,
         "Errors": error_count,
-        "ReturnMessage": "Добавление книг прошло успешно."
+        "ReturnMessage": return_message,
     }

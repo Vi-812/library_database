@@ -48,14 +48,19 @@ def category_detail(request, category_id):
 
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
-    category_path = get_category_ancestors(book.categories.first()) + [book.categories.first()]
+    category_path = get_category_ancestors(book.categories.last()) + [book.categories.last()]
+
+    other_books_in_category = Book.objects.filter(categories=book.categories.last()).exclude(id=book_id)
 
     context = {
         'book': book,
-        'category_path': category_path,
+        'ancestors': category_path,
+        'default_image': DEFAULT_IMAGE_PATH,
+        'other_books_in_category': other_books_in_category,
     }
 
     return render(request, 'books/book_detail.html', context)
+
 
 
 @staff_member_required

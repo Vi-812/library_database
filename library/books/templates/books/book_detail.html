@@ -1,39 +1,57 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ book.title }}{% endblock %}
-
 {% block content %}
 <div class="text-center">
     <h2><strong>{{ book.title }}</strong></h2>
 </div>
 <div class="card">
     <div class="card-body">
-        {% if book.isbn %}
-        <p class="card-text"><strong>ISBN:</strong> {{ book.isbn }}</p>
-        {% endif %}
-        {% if book.thumbnail_url %}
-        <p class="card-text"><strong>Обложка:</strong> <img src="{{ book.thumbnail_url }}" alt="Обложка книги"></p>
+        <h4 class="card-title"><strong>ISBN:</strong> {{ book.isbn }}</h4>
+        <p>
+            <strong>Категория книги:</strong>
+            {% for ancestor in ancestors %}
+            <a href="{% url 'books:category_detail' ancestor.id %}">{{ ancestor.name }}</a>
+            {% if not forloop.last %}&gt;{% endif %}
+            {% endfor %}
+        </p>
+        {% if book.cover_image %}
+        <img src="{{ book.thumbnail_url }}" alt="Обложка">
         {% else %}
-        <p class="card-text"><strong>Обложка:</strong> Обложка отсутствует.</p>
+        <img src="{{ default_image }}" alt="Заглушка для обложки">
         {% endif %}
-        {% if book.authors.exists %}
-        <p class="card-text"><strong>Авторы:</strong> {% for author in book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        {% endif %}
-        {% if book.published_date %}
-        <p class="card-text"><strong>Дата публикации:</strong> {{ book.published_date }}</p>
-        {% endif %}
-        <p class="card-text"><strong>Статус:</strong> {{ book.status }}</p>
+        <h5 class="card-title"><strong>Авторы:</strong></h5>
+        <ul>
+            {% for author in book.authors.all %}
+            <li>{{ author.name }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Дата публикации:</strong> {{ book.published_date }}</p>
+        <p><strong>Статус:</strong> {{ book.status }}</p>
         {% if book.short_description %}
-        <p class="card-text"><strong>Краткое описание:</strong><br>{{ book.short_description }}</p>
+        <h5 class="card-title"><strong>Краткое описание:</strong></h5>
+        <p>{{ book.short_description }}</p>
         {% else %}
-        <p class="card-text"><strong>Краткое описание:</strong><br>Описание данной книги отсутствует.</p>
+        <p class="card-text">Описание данной книги отсутствует.</p>
         {% endif %}
         {% if book.long_description %}
-        <p class="card-text"><strong>Подробное описание:</strong><br>{{ book.long_description }}</p>
+        <h5 class="card-title"><strong>Полное описание:</strong></h5>
+        <p>{{ book.long_description }}</p>
+        {% endif %}
+
+        <h5 class="card-title"><strong>Другие книги в данной категории:</strong></h5>
+        {% if other_books_in_category %}
+        <ul>
+            {% for other_book in other_books_in_category %}
+            <li><a href="{% url 'books:book_detail' other_book.id %}">{{ other_book.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>В данной категории нет других книг.</p>
         {% endif %}
     </div>
 </div>
-{% if book.categories.exists %}
-<a href="{% url 'books:category_detail' book.categories.first.id %}">Вернуться к списку категорий "{{ book.categories.first.name }}"</a>
-{% endif %}
+
+<p class="text-center">
+    <a href="{% url 'books:index' %}">Вернуться к списку категорий</a>
+</p>
 {% endblock %}

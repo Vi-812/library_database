@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Category, Book, AppSettings
 from .books_parse import parser
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 import os
 
 DEFAULT_IMAGE_PATH = os.path.join(settings.BASE_DIR, 'media', 'default_image.jpg')
@@ -24,7 +25,7 @@ def index(request):
         'top_level_categories': top_level_categories,
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'books/index.html', context)
 
 
 def category_detail(request, category_id):
@@ -42,12 +43,19 @@ def category_detail(request, category_id):
         'default_image': DEFAULT_IMAGE_PATH,
     }
 
-    return render(request, 'category_detail.html', context)
+    return render(request, 'books/category_detail.html', context)
 
 
 def book_detail(request, book_id):
-    book = Book.objects.filter(id=book_id)
-    return render(request, 'book_detail.html', {'book': book})
+    book = get_object_or_404(Book, id=book_id)
+    category_path = get_category_ancestors(book.categories.first()) + [book.categories.first()]
+
+    context = {
+        'book': book,
+        'category_path': category_path,
+    }
+
+    return render(request, 'books/book_detail.html', context)
 
 
 @staff_member_required
@@ -79,4 +87,4 @@ def settings_view(request):
             app_settings.save()
 
     context = {"app_settings": app_settings, "report_settings": report_settings}
-    return render(request, "settings.html", context)
+    return render(request, "books/settings.html", context)

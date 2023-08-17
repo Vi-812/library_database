@@ -21,7 +21,7 @@
                 <a class="nav-link" href="{% url 'books:book_search' %}">Поиск книги</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Обратная связь</a>
+                <a class="nav-link" href="{% url 'feedback:feedback' %}">Обратная связь</a>
             </li>
             {% if user.is_authenticated and user.is_superuser %}
                 <li class="nav-item">

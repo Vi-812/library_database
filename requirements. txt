@@ -5,6 +5,7 @@ pip install python-dotenv
 pip install requests
 pip install loguru
 pip install python-dateutil
+pip install django-widget-tweaks ??
 
 
 root/sql1234
@@ -17,22 +18,3 @@ git clone
 requirements
 migration
 createsuperuser
-
-
-from .models import Category, Author, Book
-
-            def get_category_path(category, path=[]):
-                path.append(category.name)
-                if category.parent:
-                    return get_category_path(category.parent, path)
-                return path
-
-            book_isbn = "193011043X"
-            selected_book = Book.objects.get(isbn=book_isbn)
-            all_categories = selected_book.categories.all()
-
-            for category in all_categories:
-                category_path = get_category_path(category)
-                category_hierarchy = " > ".join(category_path)
-            print(category_hierarchy)
-

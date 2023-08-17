@@ -1,20 +1,15 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.conf import settings
+from django.core.paginator import Paginator
+from django.db.models import Q
+import os
+from .category_ancestors import get_category_ancestors
 from .models import Category, Book, AppSettings
 from .books_parse import parser
-from django.conf import settings
-from django.shortcuts import get_object_or_404
-import os
+from .forms import BookSearchForm
 
 DEFAULT_IMAGE_PATH = os.path.join(settings.BASE_DIR, 'media', 'default_image.jpg')
-
-
-def get_category_ancestors(category):
-    ancestors = []
-    while category.parent:
-        ancestors.insert(0, category.parent)
-        category = category.parent
-    return ancestors
 
 
 def index(request):
@@ -35,11 +30,18 @@ def category_detail(request, category_id):
 
     books = Book.objects.filter(categories=category)
 
+    app_settings = AppSettings.objects.first()
+    books_per_page = app_settings.books_per_page
+
+    paginator = Paginator(books, books_per_page)
+    page_number = request.GET.get('page')
+    books_on_page = paginator.get_page(page_number)
+
     context = {
         'category': category,
         'ancestors': ancestors,
         'subcategories': subcategories,
-        'books': books,
+        'books_on_page': books_on_page,
         'default_image': DEFAULT_IMAGE_PATH,
     }
 
@@ -48,14 +50,67 @@ def category_detail(request, category_id):
 
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
-    category_path = get_category_ancestors(book.categories.first()) + [book.categories.first()]
+    category_path = get_category_ancestors(book.categories.last()) + [book.categories.last()]
+
+    other_books_in_category = Book.objects.filter(categories=book.categories.last()).exclude(id=book_id)
 
     context = {
         'book': book,
-        'category_path': category_path,
+        'ancestors': category_path,
+        'default_image': DEFAULT_IMAGE_PATH,
+        'other_books_in_category': other_books_in_category,
     }
 
     return render(request, 'books/book_detail.html', context)
+
+
+def book_search(request):
+    results = []
+    show_results = False
+
+    if request.method == 'GET':
+        form = BookSearchForm(request.GET)
+        if form.is_valid():
+            query = Q()
+
+            title = form.cleaned_data.get('title')
+            if title:
+                query &= Q(title__icontains=title)
+
+            isbn = form.cleaned_data.get('isbn')
+            if isbn:
+                query &= Q(isbn__icontains=isbn)
+
+            published_date_start = form.cleaned_data.get('published_date_start')
+            if published_date_start:
+                query &= Q(published_date__gte=published_date_start)
+
+            published_date_end = form.cleaned_data.get('published_date_end')
+            if published_date_end:
+                query &= Q(published_date__lte=published_date_end)
+
+            status = form.cleaned_data.get('status')
+            if status:
+                query &= Q(status=status)
+
+            author_name = form.cleaned_data.get('author_name')
+            if author_name:
+                query &= Q(authors__name__icontains=author_name)
+
+            if query:
+                results = Book.objects.filter(query)
+                show_results = True
+
+    else:
+        form = BookSearchForm()
+
+    context = {
+        'form': form,
+        'results': results,
+        'show_results': show_results,
+    }
+
+    return render(request, 'books/book_search.html', context)
 
 
 @staff_member_required

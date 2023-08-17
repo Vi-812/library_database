@@ -5,114 +5,63 @@
         {% block title %}
         {% endblock %}
     </title>
-
-    <!-- Подключение стилей Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Ваши стили -->
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            background-color: #f1f1f1;
-            padding: 10px;
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            align-items: center;
-            width: 100%;
-        }
-
-        .separator {
-            width: 100%;
-            height: 2px;
-            background-color: #ccc;
-        }
-
-        main {
-            padding: 20px;
-            width: 80%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            box-sizing: border-box;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        footer {
-            background-color: #f1f1f1;
-            padding: 10px;
-            width: 100%;
-        }
-
-        /* Дополнительные стили */
-        header a {
-            text-decoration: none;
-            margin-left: 10px;
-        }
-
-        /* Стили для формы */
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        form input[type="submit"] {
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
 
-<header>
-    <div style="grid-column: 1;">
-        <a href="{% url 'books:index' %}">Главная страница</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'books:index' %}">Главная страница</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'books:book_search' %}">Поиск книги</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Обратная связь</a>
+            </li>
+            {% if user.is_authenticated and user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'books:app_settings' %}">Настройки</a>
+                </li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="navbar-text">Привет, {{ user.username }}!</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
-    <div style="grid-column: 2;">
-        <a href="#">Поиск книги</a>
-    </div>
-    <div style="grid-column: 3;">
-        <a href="#">Обратная связь</a>
-    </div>
-    <div style="grid-column: 4;">
-        {% if user.is_authenticated and user.is_superuser %}
-            <a href="{% url 'books:app_settings' %}">Настройки</a>
-        {% endif %}
-    </div>
-    <div style="grid-column: 5;">
-    </div>
-    <div style="grid-column: 6 / span 2; text-align: right;">
-        {% if user.is_authenticated %}
-            Привет, {{ user.username }}!
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    </div>
-</header>
+</nav>
 
-<div class="separator"></div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-8">
+            <main>
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+</div>
 
-<main>
-    {% block content %}
-    {% endblock %}
-</main>
+<footer class="mt-4">
 
-<div class="separator"></div>
-
-<footer>
-    <!-- ... (ваш текущий код для подвала) ... -->
 </footer>
 
-<!-- Подключение скриптов Bootstrap -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

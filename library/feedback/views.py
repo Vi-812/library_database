@@ -1,4 +1,4 @@
-import random
+from random import randint
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.conf import settings
@@ -6,10 +6,25 @@ from .forms import FeedbackForm
 
 
 def feedback_view(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        captcha_num1 = randint(0, 20)
+        captcha_num2 = randint(0, 20)
+        form = FeedbackForm()
+        context = {
+            'form': form,
+            'captcha_num1': captcha_num1,
+            'captcha_num2': captcha_num2,
+        }
+        return render(request, 'feedback/feedback_form.html', context)
+    else:
+
+
+
+
+
         form = FeedbackForm(request.POST)
-        captcha_num1 = random.randint(0, 20)
-        captcha_num2 = random.randint(0, 20)
+        captcha_num1 = randint(0, 20)
+        captcha_num2 = randint(0, 20)
         if form.is_valid():
             captcha_answer = request.POST.get('captcha')
             captcha_solution = str(captcha_num1 + captcha_num2)
@@ -35,9 +50,3 @@ def feedback_view(request):
         else:
             context = {'form': form, 'captcha_num1': captcha_num1, 'captcha_num2': captcha_num2}
             return render(request, 'feedback/feedback_form.html', context)
-    else:
-        captcha_num1 = random.randint(0, 20)
-        captcha_num2 = random.randint(0, 20)
-        form = FeedbackForm()
-        context = {'form': form, 'captcha_num1': captcha_num1, 'captcha_num2': captcha_num2}
-        return render(request, 'feedback/feedback_form.html', context)

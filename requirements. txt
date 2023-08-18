@@ -6,10 +6,14 @@ pip install requests
 pip install loguru
 pip install python-dateutil
 pip install django-widget-tweaks ??
+pip install django-smtp-ssl
 
 
 root/sql1234
 admin/admin
+
+chen1980.xx@gmail.com
+M3pnedyNR1cY
 
 
 MySQL

@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from .load_dotenv import django_secret_key, database_name, database_username, \
-    database_password, database_host, database_port
+from .load_dotenv import *
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -130,3 +129,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = 'books:index'
 
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = gmail_user
+EMAIL_HOST_PASSWORD = gmail_password

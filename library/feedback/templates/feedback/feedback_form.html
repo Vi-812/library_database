@@ -3,25 +3,32 @@
 {% block title %}Обратная связь{% endblock %}
 
 {% block content %}
-    <h1>Feedback Form</h1>
-    <form method="post">
-        {% csrf_token %}
+<h1>Feedback Form</h1>
+<form method="post">
+    {% csrf_token %}
 
-        <label for="name">Your Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+    <label for="{{ form.name.id_for_label }}">Your Name:</label>
+    {{ form.name }}<br><br>
 
-        <label for="email">Your Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
+    <label for="{{ form.email.id_for_label }}">Your Email:</label>
+    {{ form.email }}<br><br>
 
-        <label for="message">Your Message:</label><br>
-        <textarea id="message" name="message" rows="5" required></textarea><br><br>
+    <label for="{{ form.phone.id_for_label }}">Your Phone:</label>
+    {{ form.phone }}<br><br>
 
-        <label for="captcha">What is {{ captcha_num1 }} + {{ captcha_num2 }}?</label>
-        <input type="text" id="captcha" name="captcha" required><br><br>
+    <label for="{{ form.message.id_for_label }}">Your Message:</label><br>
+    {{ form.message }}<br><br>
 
-        <button type="submit">Submit Feedback</button>
-    </form>
-    {% if captcha_error %}
-        <p style="color: red;">Incorrect answer to the captcha. Please try again.</p>
-    {% endif %}
+    <label for="captcha">What is {{ captcha_num1 }} + {{ captcha_num2 }}?</label>
+    <input type="text" id="captcha" name="captcha" required><br><br>
+
+    <input type="hidden" name="captcha_num1" value="{{ captcha_num1 }}">
+    <input type="hidden" name="captcha_num2" value="{{ captcha_num2 }}">
+
+    <button type="submit">Submit Feedback</button>
+</form>
+
+{% if message_to_user %}
+<p style="color: red;">{{ message_to_user }}</p>
+{% endif %}
 {% endblock %}

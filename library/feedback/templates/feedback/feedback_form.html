@@ -19,8 +19,8 @@
     <label for="{{ form.message.id_for_label }}">Your Message:</label><br>
     {{ form.message }}<br><br>
 
-    <label for="captcha">What is {{ captcha_num1 }} + {{ captcha_num2 }}?</label>
-    <input type="text" id="captcha" name="captcha" required><br><br>
+    <label for="recaptcha">What is {{ captcha_num1 }} + {{ captcha_num2 }}?</label>
+    <input type="text" id="recaptcha" name="recaptcha" required><br><br>
 
     <input type="hidden" name="captcha_num1" value="{{ captcha_num1 }}">
     <input type="hidden" name="captcha_num2" value="{{ captcha_num2 }}">

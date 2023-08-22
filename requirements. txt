@@ -5,8 +5,8 @@ pip install python-dotenv
 pip install requests
 pip install loguru
 pip install python-dateutil
-pip install django-widget-tweaks ??
-pip install django-smtp-ssl
+pip install django-widget-tweaks
+pip install django-smtp-ssl ??
 
 
 root/sql1234
